@@ -1,4 +1,4 @@
-export const business = {name:'Aryana Cakery',address:'314 Stanningley Road, Leeds, LS13 3EG',instagram:'https://www.instagram.com/aryana_cakery/',weddingInstagram:'https://www.instagram.com/aryana_cakery_wedding/',maps:'https://www.google.com/maps/search/?api=1&query=Aryana+Cakery+314+Stanningley+Road+Leeds+LS13+3EG',origin:'https://aryana-cakery-leeds.elated-okapi-1297.chatgpt.site'};
+export const business = {name:'Aryana Cakery',address:'314 Stanningley Road, Leeds, LS13 3EG',instagram:'https://www.instagram.com/aryana_cakery/',weddingInstagram:'https://www.instagram.com/aryana_cakery_wedding/',maps:'https://www.google.com/maps/search/?api=1&query=Aryana+Cakery+314+Stanningley+Road+Leeds+LS13+3EG',origin:'https://aryana-cakery-leeds.alirezamotamedi.chatgpt.site'};
 export type CakeImage={id:string;title:string;alt:string;category:string;};
 export const cakes:CakeImage[]=[
 {id:'pink-bow-cake',title:'A little pink perfection',alt:'Sculpted pink icing bows covering a round bespoke celebration cake at Aryana Cakery in Leeds',category:'Birthday'},
