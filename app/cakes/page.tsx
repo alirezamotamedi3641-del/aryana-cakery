@@ -1,0 +1,6 @@
+import type {Metadata} from 'next';
+import {categories} from '@/lib/cakery';
+import {CTA} from '@/components/cakery/sections';
+import {ArrowUpRight,Heart} from 'lucide-react';
+export const metadata:Metadata={title:'Bespoke Cakes Leeds | Explore Our Cakes',description:'Find your kind of cake at Aryana Cakery in Leeds. Explore bespoke birthday, kids, wedding, event, anniversary, corporate and Valentine’s cakes.',alternates:{canonical:'/cakes'}};
+export default function CakesPage(){return <main id="main"><section className="page-intro wrap"><div className="eyebrow"><Heart/> SOMETHING FOR YOUR OCCASION</div><h1>So many reasons<br/>to <em>celebrate.</em></h1><p>Big days, little surprises and all the moments between. Every cake starts with your idea.</p></section><section className="wrap cake-catalogue">{categories.map(c=><a href={'/cakes/'+c.slug} key={c.slug} className="catalogue-card"><div><img src={'/images/'+c.image+'.webp'} alt={c.name+' design by Aryana Cakery in Leeds'} width="600" height="770" loading="lazy"/></div><span className="catalogue-caption"><span><h2>{c.name}</h2><p>{c.short}</p></span><span className="round-arrow"><ArrowUpRight/></span></span></a>)}</section><CTA title="Something completely your own?" text="You don’t need a finished design. Share the occasion and a few ideas, and let’s start there."/></main>}

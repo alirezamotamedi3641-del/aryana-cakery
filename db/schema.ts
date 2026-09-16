@@ -1,0 +1,2 @@
+import {integer,sqliteTable,text} from 'drizzle-orm/sqlite-core';
+export const enquiries=sqliteTable('cake_enquiries',{id:text('id').primaryKey(),reference:text('reference').notNull(),name:text('name').notNull(),email:text('email').notNull(),phone:text('phone').notNull(),requiredDate:text('required_date').notNull(),message:text('message').notNull(),imageKey:text('image_key'),imageName:text('image_name'),imageType:text('image_type'),imageBytes:integer('image_bytes'),createdAt:text('created_at').notNull()});
