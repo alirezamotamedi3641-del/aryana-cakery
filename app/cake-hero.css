@@ -1,0 +1,52 @@
+.cake-scroll-hero { height: 270svh; overflow: visible; }
+.cake-hero-sticky { position: sticky; top: 90px; height: calc(100svh - 90px); min-height: 560px; overflow: clip; display: flex; flex-direction: column; background: #fcf1f5; }
+.cake-scroll-hero .hero-inner { flex: 1; min-height: 0; width: min(1280px, calc(100% - 96px)); padding-block: 24px; gap: 32px; }
+.cake-scroll-hero h1 { font-size: clamp(2.8rem, 5vw, 5.2rem); }
+.cake-scroll-hero .hero-copy { padding-bottom: 0; }
+.cake-scroll-hero .hero-copy > p { margin-top: 22px; }
+.cake-scroll-hero .hero-foot { flex-shrink: 0; padding-block: 14px; }
+.cake-hero-visual { position: relative; height: 100%; min-height: 430px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.cake-stack { position: relative; height: min(65svh, 560px); aspect-ratio: 350 / 560; max-width: 100%; margin-bottom: 35px; }
+.cake-tier { position: absolute; transform: translateY(var(--tier-lift, 0px)) scale(var(--tier-scale, 1)); opacity: var(--tier-opacity, 1); transform-origin: center bottom; will-change: transform, opacity; pointer-events: none; }
+.cake-sprite { width: 100%; height: 100%; background-image: url('/images/floral-cake-tiers.png'); background-size: 200% 200%; background-repeat: no-repeat; }
+.cake-sprite-0 { background-size: 180.432% 269.677%; background-position: 1.789% 20.279%; }
+.cake-sprite-1 { background-size: 236.604% 295.059%; background-position: 98.757% 23.522%; }
+.cake-sprite-2 { background-size: 278.667% 343.562%; background-position: 16.791% 86.614%; }
+.cake-sprite-3 { background-size: 330% 302.169%; background-position: 87.529% 86.412%; }
+.cake-tier-0 { width: 100%; height: 30%; left: 0; bottom: 0; z-index: 1; }
+.cake-tier-1 { width: 76.26%; height: 27%; left: 11.87%; bottom: 26%; z-index: 2; }
+.cake-tier-2 { width: 64.75%; height: 24%; left: 17.625%; bottom: 49%; z-index: 3; }
+.cake-tier-3 { width: 54.68%; height: 26.5%; left: 22.66%; bottom: 70%; z-index: 4; }
+.cake-scroll-cue { position: absolute; bottom: 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; width: 230px; color: #916176; font-size: .85rem; }
+.cake-scroll-cue > svg { width: 15px; height: 15px; }
+.cake-progress { width: 100%; height: 2px; background: #ead5df; margin-top: 4px; overflow: hidden; }
+.cake-progress span { display: block; height: 100%; background: #a23860; transform: scaleX(var(--cake-progress, 0)); transform-origin: left; }
+@media(max-width:1100px) {
+  .cake-scroll-hero .hero-inner { width: calc(100% - 64px); gap: 20px; }
+  .cake-scroll-hero .hero-note { font-size: .75rem; }
+}
+@media(max-width:800px) {
+  .cake-scroll-hero { height: 240svh; }
+  .cake-hero-sticky { top: 77px; height: calc(100svh - 77px); min-height: 620px; }
+  .cake-scroll-hero .hero-inner { width: calc(100% - 40px); grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding-block: 20px 14px; gap: 10px; }
+  .cake-scroll-hero h1 { font-size: clamp(2rem, 6.5vw, 3rem); }
+  .cake-scroll-hero .eyebrow { margin-bottom: 12px; font-size: .7rem; }
+  .cake-scroll-hero .hero-copy > p { font-size: .9rem; line-height: 1.6; margin-top: 12px; max-width: 540px; }
+  .cake-scroll-hero .button-row { margin-top: 16px; }
+  .cake-scroll-hero .btn { min-height: 44px; font-size: .9rem; padding: 12px 18px; }
+  .cake-scroll-hero .hero-note, .cake-scroll-hero .hero-foot { display: none; }
+  .cake-hero-visual { min-height: 285px; }
+  .cake-stack { height: min(38svh, 360px); min-height: 260px; margin-bottom: 25px; }
+  .cake-scroll-cue { font-size: .75rem; bottom: 0; }
+}
+@media(max-height:700px) and (min-width:801px) {
+  .cake-scroll-hero h1 { font-size: 3rem; }
+  .cake-scroll-hero .hero-copy > p { font-size: .9rem; margin-top: 16px; }
+  .cake-scroll-hero .hero-note { display: none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .cake-scroll-hero { height: auto; }
+  .cake-hero-sticky { position: relative; top: 0; height: auto; min-height: 650px; }
+  .cake-tier { opacity: 1 !important; transform: none !important; will-change: auto; }
+  .cake-scroll-cue { display: none; }
+}
