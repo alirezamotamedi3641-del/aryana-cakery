@@ -1,0 +1,16 @@
+.footer-credit { display: block; margin-top: 6px; font-size: 12px; line-height: 1.8; }
+.footer-credit a { display: inline-grid; position: relative; max-width: 100%; color: inherit; vertical-align: top; text-decoration: none; }
+.footer-credit .credit-default, .footer-credit .credit-hover { grid-area: 1 / 1; transition: opacity 300ms ease, transform 300ms ease; }
+.credit-default > span { font-weight: 500; }
+.footer-credit .credit-hover { display: none; }
+@media (min-width: 801px) and (hover: hover) and (pointer: fine) {
+  .footer-credit a { min-height: 25px; }
+  .footer-credit .credit-default { opacity: 1; transform: translateY(0); }
+  .footer-credit .credit-hover { display: inline-flex; align-items: center; gap: 5px; align-self: start; font-size: 14px; font-weight: 500; letter-spacing: .035em; color: #e2ff31; opacity: 0; transform: translateY(3px); pointer-events: none; }
+  .footer-credit .credit-hover svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .footer-credit a:hover .credit-default, .footer-credit a:focus-visible .credit-default { opacity: 0; transform: translateY(-3px); }
+  .footer-credit a:hover .credit-hover, .footer-credit a:focus-visible .credit-hover { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-credit .credit-default, .footer-credit .credit-hover { transition: none; }
+}
