@@ -1,0 +1,23 @@
+.review-marquee .marquee-track { animation-duration: 240s; }
+.review-marquee:focus-within .marquee-track { animation-play-state: paused; }
+.review-marquee .review-card {
+  height: 22rem;
+  display: grid;
+  grid-template-rows: 4rem 1fr 2.5rem;
+  gap: 1rem;
+}
+.review-card .review-person { margin-top: 0; min-width: 0; }
+.review-person > div { min-width: 0; }
+.review-card .review-person h3 { overflow-wrap: anywhere; }
+.review-card blockquote {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--body);
+}
+.review-card-action { align-self: end; }
+.review-read-more { display: inline-flex; align-items: center; gap: .4rem; background: transparent; border: 0; padding: .4rem 0; color: var(--deep-pink); font-size: .9rem; font-weight: 600; }
+.review-read-more svg { width: 1rem; height: 1rem; }
+.review-read-more:hover { text-decoration: underline; text-underline-offset: 4px; }
+.review-dialog[data-slot=dialog-content] { max-height: 85dvh; overflow-y: auto; border-radius: 22px; }
+.review-dialog blockquote { margin: .5rem 0; white-space: pre-line; font-size: 1rem; line-height: 1.8; color: var(--body); }
