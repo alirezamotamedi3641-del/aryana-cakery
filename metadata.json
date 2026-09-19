@@ -1,0 +1,6 @@
+{
+  "name": "Aryana Cakery",
+  "description": "Bespoke celebration and wedding cakes, handmade in Leeds. Explore designs and submit custom cake enquiries.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
