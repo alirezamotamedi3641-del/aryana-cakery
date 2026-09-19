@@ -14,6 +14,7 @@ export function ScrollCakeHero() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     const frame = root.querySelector<HTMLElement>('.cake-hero-sticky')!;
     const layers = Array.from(root.querySelectorAll<HTMLElement>('[data-cake-tier]'));
+    const florals = Array.from(root.querySelectorAll<HTMLElement>('[data-floral]'));
     let raf = 0;
     const update = () => {
       raf = 0;
@@ -27,6 +28,11 @@ export function ScrollCakeHero() {
         layer.style.setProperty('--tier-scale', String(.96 + local * .04));
       });
       root.style.setProperty('--cake-progress', String(progress));
+      florals.forEach((floral, index) => {
+        const reveal = smooth(clamp((progress - [.08, .34, .61][index]) / .28));
+        floral.style.setProperty('--floral-opacity', String(reveal));
+        floral.style.setProperty('--floral-drift', `${(1 - reveal) * 28}px`);
+      });
     };
     const schedule = () => { if (!raf) raf = requestAnimationFrame(update); };
     const observer = new ResizeObserver(schedule);
@@ -57,6 +63,9 @@ export function ScrollCakeHero() {
         </div>
         <div className="cake-hero-visual">
           <div className="cake-stack" role="img" aria-label="A four-tier white cake decorated with delicate flowers, assembling from the base upwards as you scroll">
+            <div className="cake-halo" aria-hidden="true"/>
+            <div className="cake-ground-shadow" aria-hidden="true"/>
+            {[0,1,2].map(index=><div key={'floral-'+index} data-floral={index} className={'cake-floral cake-floral-'+index} aria-hidden="true"><img src="/images/cake-floral-accent.png" alt="" width="1024" height="1024" draggable={false}/></div>)}
             {[0,1,2,3].map(tier=><div key={tier} data-cake-tier={tier} className={'cake-tier cake-tier-'+tier} aria-hidden="true"><div className={'cake-sprite cake-sprite-'+tier}/></div>)}
           </div>
           <div className="cake-scroll-cue"><ArrowDown aria-hidden="true"/><span>A little magic, tier by tier</span><div className="cake-progress" aria-hidden="true"><span/></div></div>
