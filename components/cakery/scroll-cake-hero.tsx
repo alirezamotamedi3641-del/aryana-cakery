@@ -1,77 +1,205 @@
 'use client';
 
-import {useEffect, useRef} from 'react';
-import {ArrowDown, ArrowRight, ChefHat, Heart, MapPin, Sparkles} from 'lucide-react';
+import {useEffect, useRef, useState} from 'react';
+import {ArrowRight, ChefHat, Heart, MapPin, Pause, Play, Sparkles} from 'lucide-react';
 
-const clamp = (value: number) => Math.max(0, Math.min(1, value));
-const smooth = (value: number) => value * value * (3 - 2 * value);
+const VIDEO_URL =
+  'https://firebasestorage.googleapis.com/v0/b/aryana-cackery-leeds.firebasestorage.app/o/videos%2FScreen%20Recording%20-%2031%20Jul%202026%2C%20000524.mp4?alt=media&token=45cd3eeb-8494-45f4-bda8-4ca225629134';
 
-export function ScrollCakeHero() {
-  const section = useRef<HTMLElement>(null);
+export function VideoHero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const userPausedRef = useRef(false);
+
   useEffect(() => {
-    const root = section.current;
-    if (!root) return;
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const frame = root.querySelector<HTMLElement>('.cake-hero-sticky')!;
-    const layers = Array.from(root.querySelectorAll<HTMLElement>('[data-cake-tier]'));
-    const florals = Array.from(root.querySelectorAll<HTMLElement>('[data-floral]'));
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const top = parseFloat(getComputedStyle(frame).top) || 0;
-      const distance = Math.max(1, root.offsetHeight - frame.offsetHeight);
-      const progress = reduced.matches ? 1 : clamp((top - root.getBoundingClientRect().top) / distance);
-      layers.forEach((layer, index) => {
-        const local = index === 0 ? 1 : smooth(clamp((progress - (index - 1) * .28 - .04) / .25));
-        layer.style.setProperty('--tier-opacity', String(local));
-        layer.style.setProperty('--tier-lift', `${(1 - local) * -150}px`);
-        layer.style.setProperty('--tier-scale', String(.96 + local * .04));
-      });
-      root.style.setProperty('--cake-progress', String(progress));
-      florals.forEach((floral, index) => {
-        const reveal = smooth(clamp((progress - [.08, .34, .61][index]) / .28));
-        floral.style.setProperty('--floral-opacity', String(reveal));
-        floral.style.setProperty('--floral-drift', `${(1 - reveal) * 28}px`);
-      });
+    const video = videoRef.current || (document.getElementById('hero-video') as HTMLVideoElement | null);
+    if (!video) return;
+
+    const handlePlay = () => {
+      if (userPausedRef.current) {
+        video.pause();
+        setIsPlaying(false);
+        return;
+      }
+      setIsPlaying(true);
     };
-    const schedule = () => { if (!raf) raf = requestAnimationFrame(update); };
-    const observer = new ResizeObserver(schedule);
-    observer.observe(root);
-    observer.observe(frame);
-    window.addEventListener('scroll', schedule, {passive:true});
-    window.addEventListener('resize', schedule);
-    reduced.addEventListener('change', schedule);
-    update();
+
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
+
+    video.addEventListener('play', handlePlay);
+    video.addEventListener('playing', handlePlay);
+    video.addEventListener('pause', handlePause);
+    video.addEventListener('ended', handlePause);
+
+    // Respect visitor motion preferences
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (prefersReducedMotion.matches) {
+      userPausedRef.current = true;
+      video.pause();
+      setIsPlaying(false);
+    } else if (!userPausedRef.current) {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            if (!userPausedRef.current) {
+              setIsPlaying(true);
+            } else {
+              video.pause();
+              setIsPlaying(false);
+            }
+          })
+          .catch(() => {
+            if (!userPausedRef.current) {
+              setIsPlaying(false);
+            }
+          });
+      }
+    }
+
     return () => {
-      cancelAnimationFrame(raf);
-      observer.disconnect();
-      window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', schedule);
-      reduced.removeEventListener('change', schedule);
+      video.removeEventListener('play', handlePlay);
+      video.removeEventListener('playing', handlePlay);
+      video.removeEventListener('pause', handlePause);
+      video.removeEventListener('ended', handlePause);
     };
   }, []);
 
-  return <section ref={section} className="hero cake-scroll-hero" aria-label="A cake coming together, tier by tier">
-    <div className="cake-hero-sticky">
-      <div className="wrap hero-inner">
-        <div className="hero-copy">
-          <div className="eyebrow"><Sparkles/> A LITTLE MAGIC. A LOT OF CAKE.</div>
-          <h1>Bespoke cakes.<br/><em>Made for you.</em><br/>Made in Leeds.</h1>
-          <p>Celebration cakes, wedding cakes and all the lovely moments in between. Handmade with imagination, care and a little Aryana magic.</p>
-          <div className="button-row"><a href="/order" className="btn btn-primary">Order Your Cake <ArrowRight/></a><a href="/cakes" className="btn btn-secondary">View Our Cakes</a></div>
-          <div className="hero-note"><Heart/> Your ideas, our icing. Something completely you.</div>
-        </div>
-        <div className="cake-hero-visual">
-          <div className="cake-stack" role="img" aria-label="A four-tier white cake decorated with delicate flowers, assembling from the base upwards as you scroll">
-            <div className="cake-halo" aria-hidden="true"/>
-            <div className="cake-ground-shadow" aria-hidden="true"/>
-            {[0,1,2].map(index=><div key={'floral-'+index} data-floral={index} className={'cake-floral cake-floral-'+index} aria-hidden="true"><img src="/images/cake-floral-accent.png" alt="" width="1024" height="1024" draggable={false}/></div>)}
-            {[0,1,2,3].map(tier=><div key={tier} data-cake-tier={tier} className={'cake-tier cake-tier-'+tier} aria-hidden="true"><div className={'cake-sprite cake-sprite-'+tier}/></div>)}
+  const togglePlayback = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const video = videoRef.current || (document.getElementById('hero-video') as HTMLVideoElement | null);
+    if (!video) return;
+
+    // Determine current active playing state
+    const isActivelyPlaying = !video.paused && !video.ended && video.readyState > 1;
+    const shouldPause = isPlaying || isActivelyPlaying;
+
+    if (shouldPause) {
+      userPausedRef.current = true;
+      video.pause();
+      setIsPlaying(false);
+    } else {
+      userPausedRef.current = false;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch(() => {
+            setIsPlaying(false);
+          });
+      } else {
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  return (
+    <section id="hero" className="hero video-hero" aria-label="Aryana Cakery welcome">
+      {/* Background Video Layer */}
+      <div className="hero-video-wrap" aria-hidden="true">
+        <video
+          id="hero-video"
+          ref={videoRef}
+          className="hero-video"
+          src={VIDEO_URL}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster="/images/hero-video-poster.jpg"
+          aria-hidden="true"
+        >
+          <source src={VIDEO_URL} type="video/mp4" />
+        </video>
+        <div className="hero-video-overlay" />
+      </div>
+
+      {/* Main Hero Foreground Content */}
+      <div className="wrap hero-main-content">
+        <div className="hero-copy-video">
+          <div className="hero-eyebrow-chip">
+            <Sparkles aria-hidden="true" />
+            <span>A Little Magic. A Lot of Cake.</span>
           </div>
-          <div className="cake-scroll-cue"><ArrowDown aria-hidden="true"/><span>A little magic, tier by tier</span><div className="cake-progress" aria-hidden="true"><span/></div></div>
+
+          <h1>
+            Bespoke cakes.
+            <br />
+            <em>Made for you.</em>
+            <br />
+            Made in Leeds.
+          </h1>
+
+          <p className="hero-lead">
+            Celebration cakes, wedding cakes and all the lovely moments in between. Handmade with
+            imagination, care and a little Aryana magic.
+          </p>
+
+          <div className="button-row">
+            <a id="hero-order-btn" href="/order" className="btn btn-primary hero-btn-primary">
+              <span>Order Your Cake</span>
+              <ArrowRight aria-hidden="true" />
+            </a>
+            <a id="hero-cakes-btn" href="/cakes" className="btn hero-btn-secondary">
+              <span>View Our Cakes</span>
+            </a>
+          </div>
+
+          <div className="hero-note-video">
+            <Heart aria-hidden="true" />
+            <span>Your ideas, our icing. Something completely you.</span>
+          </div>
         </div>
       </div>
-      <div className="wrap hero-foot"><span><ChefHat/> Level 2 &amp; 3 trained Pastry Chef</span><span><Heart/> Beautifully bespoke</span><span><MapPin/> Your local Leeds cakery</span></div>
-    </div>
-  </section>;
+
+      {/* Trust & Accreditations Foot Bar with Accessible Video Controls */}
+      <div className="hero-trust-bar">
+        <div className="wrap hero-trust-inner">
+          <div className="hero-trust-items">
+            <div className="hero-trust-item">
+              <ChefHat aria-hidden="true" />
+              <span>Level 2 &amp; 3 trained Pastry Chef</span>
+            </div>
+            <div className="hero-trust-divider" aria-hidden="true" />
+            <div className="hero-trust-item">
+              <Heart aria-hidden="true" />
+              <span>Beautifully bespoke</span>
+            </div>
+            <div className="hero-trust-divider" aria-hidden="true" />
+            <div className="hero-trust-item">
+              <MapPin aria-hidden="true" />
+              <span>Your local Leeds cakery</span>
+            </div>
+          </div>
+
+          <button
+            id="hero-video-toggle"
+            type="button"
+            onClick={togglePlayback}
+            className="hero-video-toggle"
+            aria-label={isPlaying ? 'Pause background video' : 'Play background video'}
+            title={isPlaying ? 'Pause background video' : 'Play background video'}
+          >
+            {isPlaying ? (
+              <Pause className="size-3.5" aria-hidden="true" />
+            ) : (
+              <Play className="size-3.5" aria-hidden="true" />
+            )}
+            <span>{isPlaying ? 'Pause video' : 'Play video'}</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  );
 }
+
+// Named alias export for compatibility with existing imports
+export const ScrollCakeHero = VideoHero;
