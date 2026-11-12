@@ -215,14 +215,16 @@ export function Header() {
                     onClick={handleLinkClick}
                     id="mega-feature-wedding"
                   >
-                    <Image
-                      src="/images/floral-wedding-cake-small.webp"
-                      alt="White floral wedding cake handcrafted in Leeds"
-                      width={273}
-                      height={144}
-                      style={{ width: '100%', height: '144px', objectFit: 'cover' }}
-                      loading="lazy"
-                    />
+                    <div className="mega-feature-media">
+                      <Image
+                        src="/images/floral-wedding-cake-small.webp"
+                        alt="White floral wedding cake handcrafted in Leeds"
+                        fill
+                        sizes="273px"
+                        style={{ objectFit: 'cover' }}
+                        loading="lazy"
+                      />
+                    </div>
                     <h3>Your forever cake</h3>
                     <p>Beautifully bespoke, just like your day.</p>
                   </Link>

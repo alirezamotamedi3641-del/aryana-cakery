@@ -148,12 +148,17 @@
   box-shadow: 0 10px 24px rgba(162, 56, 96, 0.1);
 }
 
-.mega-feature img {
+.mega-feature-media {
+  position: relative;
   height: 144px;
   width: 100%;
-  object-fit: cover;
   border-radius: 10px;
+  overflow: hidden;
   margin-bottom: 12px;
+}
+
+.mega-feature img {
+  object-fit: cover;
 }
 
 .mega-feature h3 {
